@@ -1,0 +1,25 @@
+
+########## Test Curso Introducción R#######
+
+
+###### Ejercicio 1##############
+
+objetoNumero <- 3
+
+objetoNumero2 <- 3
+
+print(objetoNumero)
+
+plot1<-plot(objetoNumero,objetoNumero2)
+
+objetoTexto <- "Este grupo tiene"
+
+concatena <- paste(objetoTexto," ",objetoNumero*objetoNumero2," estudiantes"
+
+concatena
+
+######
+
+install.packages("swirl")
+
+library(swirl)

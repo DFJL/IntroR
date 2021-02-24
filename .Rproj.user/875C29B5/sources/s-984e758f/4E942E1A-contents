@@ -1,0 +1,480 @@
+---
+title: \vspace{3.5in}"Tipos de estructuras de datos en R"
+author: "Felipe Jiménez"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: 
+  html_document:
+    toc: true # table of content true
+    toc_float: true
+    toc_depth: 4  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: united  # many options for theme, this one is my favorite.
+    highlight: tango  # specifies the syntax highlighting style
+---
+
+<img src="logo.png" style="position:absolute;top:0px;right:0px;" />
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Tipos de datos en R
+
+En R, existen 6 tipos de datos.Sin embargo, vamos a visualizar 4:
+
+```{r Tipos de datos}
+
+
+# Double (numérico decimal)
+x1<- c(1.2)
+
+# Entero 
+x2<- c(2)
+
+#Character
+x3<-c("Prometo no quejarme mas")
+
+#Lógico
+my_logical <- TRUE
+
+x1;x2;x3;my_logical
+
+```
+
+Con la función `typeof()` se puede obtener el tipo de datos:
+
+```{r tipos de datos 2}
+
+typeof(x1);typeof(x2);typeof(x3)
+
+
+
+```
+
+# Tipos de estructuras de datos
+
+## Vectores
+
+**Un vector** en R puede contener una colección de números o de caracteres no numéricos. Para definir un vector, por ejemplo, el vector  x = (1, 3, 5) , usaremos el comando de concatenación `c`.
+
+### Algunas funciones básicas de R
+
+Ahora vamos a repasar algunas funciones básicas de R, que son de utilidad para una gran diversidad de situaciones, a la hora de trabajar con vectores.
+
+#### `paste0()`
+Con la función `paste0()` podemos concatenar texto:
+
+```{r paste0}
+
+text <-c("El tipo de dato de x1 es ",typeof(x1))
+
+text
+  
+```
+
+#### `seq()`
+Con la función `seq()` se pueden generar secuencias de datos basadas en un patrón impuesto por el programador.
+
+Un vector de números consecutivos, por ejemplo `c(1,2,3,4,5)` se puede definir con `1:5` en R.Alternativamente y de manera general, se puede usar `seq()`:
+
+```{r seq() }
+
+x4<-1:5
+
+x4
+
+x4v2<- 5:1
+
+x5 <- seq(from=1,to=100,by=10)
+
+x5
+
+
+  
+```
+
+
+#### `rep()`
+Con la función `rep(x)` se pueden replicar los valores de x
+
+```{r rep() }
+
+#Genera un vector de 5 repeticiones de x4
+
+x6<-rep(x4,2)
+
+x6
+  
+```
+
+### Vectores con distribución de probabilidad aleatorias
+Con la función `rnorm(x)` se pueden generar fácilmente una muestra de números aleatorios que sigan una distribución normal:
+
+```{r rnorm() }
+
+x7<- rnorm(50)
+
+x7
+
+x8 <-x7+rnorm(50,mean=50,sd=.1)
+
+x8
+
+cor(x7,x8)
+  
+```
+
+### Indices de vectores
+
+Con la función `rnorm(x)` se pueden generar fácilmente una muestra de números aleatorios que sigan una distribución normal:
+
+```{r indices}
+
+## el patrón es: Teniendo un objeto x, entonces para ubicar la observación se genera mediante x[c] donde c es la posición que se desea ubicar
+
+x8[1]
+
+x8[3:5]
+
+# Con índices negativos se establece cuáles entradas no estarán en el
+# resultado
+x8[-1:-48] #En este caso solo muestra la posición 49 y 50.
+  
+```
+
+### Operadores Relacionales
+
+**<, >, ==, >=, <=, !=**
+
+```{r operadores}
+
+#Se genera un vector
+a <- c(3, 6, 9, 2, -5)
+
+#Se evalúa vectorialmente una desigualdad
+a > 4
+
+a != 4 # Se lee como "a no es igual a 4"
+
+#Se evalúa vectorialmente una igualdad
+a == 4
+
+#Para las observaciones de a, solo muestre las que son mayores a 4
+a[a > 4]
+
+
+```
+
+### Operaciones lógicas
+
+**& y |** son los operadores “y” y “o”, respectivamente, por ejemplo:
+
+```{r operadores lógicos}
+
+#Se genera un vector
+b <- c(4, 6, 8, 12, -2)
+
+#Recordemos los vectores
+a;b
+
+#Se evalúa cuando en a a<b y a<0
+a[a < b & a < 0]
+
+#Se evalúa cuando a<0 ó a >=6
+a[a < 0 | a >= 6]
+
+
+
+```
+### Aritmetica de vectores
+
+**& y |** son los operadores “y” y “o”, respectivamente, por ejemplo:
+
+```{r aritmetica}
+
+#Se generan  vectores
+x <- c(90, 98, -10, 22, -9, -55, 10, 230)
+x
+
+y <- c(0, -98, 45, -3, 1, -4, 11, 23)
+y
+
+#Se prueban diferentes cálculos aritméticos
+x+y
+
+x+2
+
+x^y
+
+y/x
+
+
+```
+
+## Factores
+
+Los factores son un tipo especial de vectores que permiten analizar variables Estadísticas  cualitativas nominales o ordinales
+
+
+```{r factors}
+
+provincia <- factor(c("Alajuela", "Heredia", "Alajuela", "Cartago", "Heredia"))
+provincia
+
+#Se prueba el tipo de objeto
+class(provincia)
+
+```
+
+
+### Niveles de  Factores
+A los factores, se le pueden agregar las categorías o rango de categorías que dicho factor puede tener:
+
+```{r factors2}
+
+
+sex <- factor(c("male", "female", "female", "male"), levels = c("male", "female"))
+
+sex
+
+#Se obtiene el número de niveles del factor
+nlevels(sex)
+
+```
+
+### Orden de los niveles de  Factores
+Cuando los factores son cualitativos el orden no es importante, pero cuando son ordinales, es importante indicar el correspondiente orden de los niveles o categorías del factor:
+
+```{r factors3}
+
+
+food <- factor(c("low", "high", "medium", "high", "low", "medium", "high"))
+levels(food)
+```
+
+Notese, como las categorías están en desorden.Para corregirlo se utiliza el argumento `ordered=TRUE` dentro de `factor()`
+
+```{r factors4}
+
+food <- factor(food, levels = c("low", "medium", "high"), ordered = TRUE)
+levels(food)
+
+```
+
+## Matrices
+
+En R, una matriz es una coleeción de datos del mismo tipo(numérico,carácter o lógico).A diferencia de los vectores, son bidimensionales, ya que tienen filas y columnas.Se utiliza la función `matrix()` para construir una matriz.
+
+```{r matriz1}
+
+#Se genera una matriz cuya data se encuentra en el argumento data, definida por el número 
+# de filas nrow y el número de columnas ncol.El argumento byrow indica la forma que se desea
+# popular la matriz.
+
+matriz1<- matrix(data=seq(1,9),nrow=4,ncol= 3,byrow=FALSE)
+matriz1
+
+```
+
+Para obtener las dimensiones de la matriz se realiza mediante `dim()` :
+
+```{r matriz2}
+
+dim(matriz1)
+
+```
+
+### Indices de matrices
+
+De igual manera que con los vectores, se pueden obtener valores específicos de las matrices mediante sus índices.La regla es matriz[f,c] donde fila es el número de fila deseado y c es el número de columna
+
+```{r matriz3}
+
+#Devuelve la posición fila 1 y columna 1
+matriz1[1,1]
+
+#Devuelve toda la columna uno, independientemente de la fila
+matriz1[,1]
+
+#Devuelve toda la fila uno, independientemente de la columna
+matriz1[1,]
+
+#Devuelve las filas 1 a 2 de las columnas 2 y 3
+matriz1[1:2, 2:3]
+
+```
+
+
+## Dataframes
+
+Los dataframes se diferencian de las matrices básicamente en dos aspectos:
+
+- Puede almacenar distintos tipos de datos.
+- Las filas son observaciones y las columnas con variables.
+
+
+### Funciones útiles sobre data frames.
+
+R tiene por defecto algunos dataframes embedidos para analizar datos.Por ejemplo, vamos a analizar `mtcars`:
+```{r df1}
+
+#Visualizar el dataframe mtcars
+mtcars
+
+# clase del objeto
+
+class(mtcars)
+
+# Visualizar estructura de los datos del dataframe
+
+str(mtcars)
+
+# Generar un resumen estadístico
+
+summary(mtcars)
+
+# Nombres de columnas
+
+names(mtcars)
+
+#El comando head y tail, generan una muestra de los primeros y últimos registros respectivamente
+
+head(mtcars,5)
+
+tail(mtcars,10)
+
+
+```
+
+
+### Crear dataframes
+
+La función `dataframe` y `as.dataframe` crean y convierte a dataframe respectivamente:
+```{r df2}
+
+#Primero, se generan datos con la función factor:
+
+ojos <- factor(c("Azules", "Marrones", "Marrones"), levels = c("Azules", "Marrones", 
+    "Verdes", "Negros"))
+ojos
+
+#Posteriormente se mezcla todo en un solo dataframe
+
+datos <- data.frame(Color.ojos = ojos, Peso = c(68, 75, 88), Altura = c(1.65, 
+    1.79, 1.85))
+datos
+
+#Además, podemos convertir la matriz a dataframe
+
+datos2<- as.data.frame(matriz1)
+datos2
+
+#Y le incluimos nombres a las columnas
+
+names(datos2)<- c("Alajuela","San Pedro","TEC")
+
+datos2
+
+#Si queremos visualizar solo una columna, alternativamente se puede usar dataframe$columna
+
+columna1<- datos2$Alajuela
+columna1
+
+
+```
+
+Podemos ver más de dataframes en <https://monashdatafluency.github.io/r-intro-2/data-frames.html>
+
+
+## Listas
+
+Finalmente tenemos las listas.Las listas son colecciones de objetos que pueden guardar a su vez muchos objetos de diverso tipos.Por ejemplo, el primer objeto puede ser un vector, el segundo una matriz y el tercero un dataframe.Estas son muy útiles para los resultados de funciones más complejas que veremos posteriormente en el curso.
+
+```{r listas1}
+
+
+#Se define la lista con objetos creados previamente
+lista1<-list(vector=x1,matriz=matriz1,dataframe=datos)
+
+#Se visualiza los resultados de la lista
+lista1
+
+#Se observan los nombres de los objetos
+
+names(lista1)
+
+
+```
+
+Existen varias maneras de obtener los objetos de una lista, como las siguientes:
+
+```{r listas2}
+
+
+#Obtener el objeto con el comando $
+
+lista1$matriz
+
+#Alternativamente se usan corchetes dobles
+
+lista1[[2]]
+
+#Si además queremos visualizar u obtener valores dentro un objeto específico de la lista, se puede realizar lo siguiente
+
+#Esto devuelve, para el objeto 2 de la lista(la matriz),toda la fila 1.
+lista1[[2]][1,]
+
+```
+
+Es importante mencionar, que a una lista se le pueden ir agregando nuevos objetos así surja la necesidad:
+
+```{r listas3}
+
+#Se indica que se va a guardar en el índice 4 de la lista(el cuál esta "vacío") un nuevo objeto 
+# de tipo caracter.
+
+lista1[[4]]<- c("Esto es un nuevo objeto")
+
+lista1
+
+```
+
+# Paquetes
+
+R cuenta con un amplio repertorio de adiciones al lenguaje base llamados "paquetes" o "librerías", los cuáles son creados por diversos tipos de usuarios para múltiples propósitos.
+
+Existe un repositorio oficial llamado [CRAN](https://cran.r-project.org/) de donde se pueden descargar versiones estables de los paquetes.Además existen otros repositorios no oficiales como [Github](https://github.com) en donde los desarrolladores tienen sus versiones de prueba, pero con mayores características, dado que son versiones nuevas de los paquetes que aún no salen a producción.
+
+Veremos brevemente la forma de instalar y cargar paquetes, de manera clásica y de manera dinámica para identificar cuando un paquete se encuentra o no instalado e instalar automáticamente:
+
+```{r paquetes}
+
+#Instalar un paquete de prueba
+
+install.packages("ggplot2")
+
+#Una vez instalado el paquete, se debe cargar en el ambiente de R para oder utilizar sus funciones
+
+library(ggplot2)
+
+##Instalar y cargar de manera automatica
+
+##Primero se crea un objeto con los paquetes que se desean instalar/cargar
+
+paquetes<- c("ggplot2","lubridate")
+
+##Aplica un ciclo iterativo para comprobar el estado de cada paquete e instalar si corresponde
+
+ for (i in paquetes){
+   if (i %in% installed.packages()[,"Package"] == FALSE){
+     install.packages(i,repos="http://cran.rstudio.com/");
+   }
+ }
+
+#Carga los paquetes sin generar mensajes o warnings
+
+sapply(paquetes,library,character.only=TRUE,quietly=T)
+
+
+```
+

@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556158754947.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "11DED365",
+    "lastKnownWriteTime" : 1556158734,
+    "last_content_update" : 1556158734,
+    "path" : "/cloud/project/CursoR/Clase1/MarkdownFiles/Clase1Reporte.Rmd",
+    "project_path" : "CursoR/Clase1/MarkdownFiles/Clase1Reporte.Rmd",
+    "properties" : {
+        "cursorPosition" : "8,0",
+        "scrollLine" : "4"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

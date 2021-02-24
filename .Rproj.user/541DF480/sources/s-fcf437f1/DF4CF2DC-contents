@@ -1,0 +1,10 @@
+
+
+
+x1<-c(1.2)
+paste0("El tipo de dato de x1 es ",typeof(x1))
+
+
+x4<- 1:5
+x4v2<- 5:1
+x4;x4v2

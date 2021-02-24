@@ -1,0 +1,27 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1555992114844.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "192|17|211|0|\n218|14|226|0|\n290|14|304|0|\n392|14|406|0|\n",
+    "hash" : "2167579600",
+    "id" : "AF077058",
+    "lastKnownWriteTime" : 1556085215,
+    "last_content_update" : 1556085215410,
+    "path" : "/cloud/project/CursoR/Clase1/MarkdownFiles/EstructurasdeDatos.Rmd",
+    "project_path" : "CursoR/Clase1/MarkdownFiles/EstructurasdeDatos.Rmd",
+    "properties" : {
+        "cursorPosition" : "85,10",
+        "last_setup_crc32" : "3efdc271bb338d19",
+        "scrollLine" : "75",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

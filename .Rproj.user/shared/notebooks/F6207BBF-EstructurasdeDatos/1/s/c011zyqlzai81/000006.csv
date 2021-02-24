@@ -1,0 +1,6 @@
+"0",""
+"0","#Y le incluimos nombres a las columnas"
+"0",""
+"0","names(datos2)<- c(""Alajuela"",""San Pedro"",""TEC"")"
+"0",""
+"0","datos2"

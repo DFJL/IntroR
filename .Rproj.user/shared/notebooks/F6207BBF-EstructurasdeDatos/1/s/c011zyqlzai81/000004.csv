@@ -1,0 +1,5 @@
+"0",""
+"0","#Además, podemos convertir la matriz a dataframe"
+"0",""
+"0","datos2<- as.data.frame(matriz1)"
+"0","datos2"

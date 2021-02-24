@@ -1,0 +1,47 @@
+---
+title: "R Studio Cloud Set up"
+author: "Instituto Tecnológico de Costa Rica"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## R Studio Cloud
+
+El curso lo vamos a manejar desde R Studio Cloud <https://rstudio.cloud>.
+
+Deben de registrarse en el sitio,con el correo de preferencia.
+
+**R Studio Cloud provee:**
+
+- Manejo de Rstudio, scripts y proyectos desde la nube.
+- Trabajo colaborativo entre diferentes personas.
+- Espacio personal de proyectos de cada usuario.
+- Diferentes versiones de R.
+- Evita problemas de compatibilidad por ambientes locales.
+
+
+## R Studio Cloud Set up 1/5
+
+![Image1](Imagen1.png)
+
+## R Studio Cloud Set up 2/5
+
+![Image2](Imagen2.png)
+
+## R Studio Cloud Set up 3/5
+
+![Image3](Imagen3.png)
+
+
+## R Studio Cloud Set up 4/5
+
+![Image4](Imagen4.png)
+
+
+## R Studio Cloud Set up 5/5
+
+![Image5](Imagen5.png)

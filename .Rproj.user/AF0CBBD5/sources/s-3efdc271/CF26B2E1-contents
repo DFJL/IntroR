@@ -1,0 +1,35 @@
+---
+title: "Untitled"
+author: "Felipe Jiménez"
+date: '`r format(Sys.time(), "%d %B, %Y")`
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Instrucciones
+
+- Genere un documento R markdown para resolver los ejercicios.
+- En su documento R markdown, incluya como texto el enunciado del ejercicio y en el chunk incluya el código y los resultados.
+- Suba a classroom únicamente el documento renderizado con los las funciones requeridas y resultados para resolver los ejercicios.
+
+# Ejercicios
+
+1- Use rep() y seq() para generar un vector con los siguientes elementos:
+
+`0 0 0 0 0 1 1 1 1 1 2 2 2 2 2 3 3 3 3 3 4 4 4 4 4`
+
+2-Use rep() y seq() para crear un vector con los siguientes elementos: 
+
+`5 4 3 2 1 5 4 3 2 1 5 4 3 2 1 5 4 3 2 1`
+
+3-Introduzca en R una matriz a 4×3 usando:
+- Los datos del ejercicio 2
+- Arreglo de 4 filas X 5 columnas.
+- LL
+
+A <- matrix(c(1,2,3,4,5,6,7,8,9,10,11,12),nrow=4,"byrow"="true")
+
+

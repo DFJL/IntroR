@@ -1,0 +1,304 @@
+---
+title: "Clase 1:Introducción a R"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+theme: united
+description: >
+  Clase 1 de introducción a R.Incluye tipos de datos en R, operadores lógicos y estructuras de datos(vectores y factores).
+---
+
+```{r setup, include=FALSE}
+
+library(stringr) 
+library(purrr)
+library(learnr)
+library(knitr)
+library(lubridate)
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE, message = FALSE,fig.width =10 , fig.height = 8)
+tutorial_options(exercise.timelimit = 120)
+knit_hooks$set(optipng = hook_optipng)
+knit_hooks$set(pngquant = hook_pngquant)
+
+```
+
+![](https://www.tec.ac.cr/sites/default/files/media/branding/logo-tec.png){width="289"}
+
+## 1- Tipos de datos en R
+
+En R, existen 6 tipos de datos.Sin embargo, vamos a visualizar 4:
+
+```{r E0,exercise=T}
+
+
+# Double (numérico decimal)
+x1<- c(1.2)
+
+# Entero 
+x2<- c(2)
+
+#Character
+x3<-c("Lo que nos hace grandes es el hecho de poder ver lo pequeños que somos")
+
+#Lógico
+my_logical <- TRUE
+
+x1;x2;x3;my_logical
+
+```
+
+Con la función `typeof()` se puede obtener el tipo de datos:
+
+```{r E1,exercise=T}
+
+
+# Double (numérico decimal)
+x1<- c(1.2)
+
+# Entero 
+x2<- c(2)
+
+#Character
+x3<-c("Lo que nos hace grandes es el hecho de poder ver lo pequeños que somos")
+
+
+typeof(x1);typeof(x2);typeof(x3)
+
+
+
+```
+
+## 2- Tipos de estructuras de datos
+
+### 2.1- Vectores
+
+**Un vector** en R puede contener una colección de números o de caracteres no numéricos. Para definir un vector, por ejemplo, el vector `x = (1, 3, 5)` , usaremos el comando de concatenación `c`.
+
+#### Algunas funciones básicas de R
+
+Ahora vamos a repasar algunas funciones básicas de R, que son de utilidad para una gran diversidad de situaciones, a la hora de trabajar con vectores.
+
+#####  `paste0()`
+
+Con la función `paste0()` podemos concatenar texto:
+
+```{r E2,exercise=T}
+
+# Double (numérico decimal)
+x1<- c(1.2)
+
+text <-c("El tipo de dato de x1 es ",typeof(x1))
+
+text
+
+```
+
+
+##### `seq()`
+
+Con la función `seq()` se pueden generar secuencias de datos basadas en un patrón impuesto por el programador.
+
+Un vector de números consecutivos, por ejemplo `c(1,2,3,4,5)` se puede definir con `1:5` en R.Alternativamente y de manera general, se puede usar `seq()`:
+
+```{r E3,exercise=T }
+
+x4<-1:5
+
+x4
+
+x4v2<- 5:1
+
+x5 <- seq(from=1,to=100,by=10)
+
+x5
+
+
+  
+```
+
+
+##### `rep()`
+Con la función `rep(x)` se pueden replicar los valores de x
+
+```{r E4,exercise=T }
+
+x4<-1:5
+
+#Genera un vector de 5 repeticiones de x4
+
+x6<-rep(x4,2)
+
+x6
+  
+```
+
+
+#### Vectores con distribución de probabilidad aleatorias
+
+Con la función `rnorm(x)` se pueden generar fácilmente una muestra de números aleatorios que sigan una distribución normal:
+
+```{r E5,exercise=T }
+
+x7<- rnorm(50)
+
+x7
+
+x8 <-x7+rnorm(50,mean=50,sd=.1)
+
+x8
+
+cor(x7,x8)
+  
+```
+
+#### Indices de vectores
+
+Con la función `rnorm(x)` se pueden generar fácilmente una muestra de números aleatorios que sigan una distribución normal:
+
+```{r E6,exercise=T}
+
+## el patrón es: Teniendo un objeto x, entonces para ubicar la observación se genera mediante x[c] donde c es la posición que se desea ubicar
+x8 <-rnorm(50,mean=50,sd=.1)
+
+x8[1]
+
+x8[3:5]
+
+# Con índices negativos se establece cuáles entradas no estarán en el
+# resultado
+x8[-1:-48] #En este caso solo muestra la posición 49 y 50.
+  
+```
+
+
+#### Operadores Relacionales
+
+**<, >, ==, >=, <=, !=**
+
+```{r E7,exercise=T}
+
+#Se genera un vector
+a <- c(3, 6, 9, 2, -5)
+
+#Se evalúa vectorialmente una desigualdad
+a > 4
+
+a != 4 # Se lee como "a no es igual a 4"
+
+#Se evalúa vectorialmente una igualdad
+a == 4
+
+#Para las observaciones de a, solo muestre las que son mayores a 4
+a[a > 4]
+
+
+```
+
+
+#### Operaciones lógicas
+
+**& y |** son los operadores “y” y “o”, respectivamente, por ejemplo:
+
+```{r E8,exercise=T}
+
+#Se genera un vector
+a <- c(3, 6, 9, 2, -5)
+
+#Se genera un vector
+b <- c(4, 6, 8, 12, -2)
+
+#Recordemos los vectores
+a;b
+
+#Se evalúa cuando en a a<b y a<0
+a[a < b & a < 0]
+
+#Se evalúa cuando a<0 ó a >=6
+a[a < 0 | a >= 6]
+
+
+
+```
+
+#### Aritmetica de vectores
+
+**& y |** son los operadores “y” y “o”, respectivamente, por ejemplo:
+
+```{r E9,exercise=T}
+
+#Se generan  vectores
+x <- c(90, 98, -10, 22, -9, -55, 10, 230)
+x
+
+y <- c(0, -98, 45, -3, 1, -4, 11, 23)
+y
+
+#Se prueban diferentes cálculos aritméticos
+x+y
+
+x+2
+
+x^y
+
+y/x
+
+
+```
+
+
+### 2.2- Factores
+
+Los factores son un tipo especial de vectores que permiten analizar variables Estadísticas  cualitativas nominales o ordinales
+
+
+```{r E10,exercise=T}
+
+provincia <- factor(c("Alajuela", "Heredia", "Alajuela", "Cartago", "Heredia"))
+provincia
+
+#Se prueba el tipo de objeto
+class(provincia)
+
+```
+
+
+#### Niveles de  Factores
+A los factores, se le pueden agregar las categorías o rango de categorías que dicho factor puede tener:
+
+```{r E11,exercise=T}
+
+
+sex <- factor(c("male", "female", "female", "male"), levels = c("male", "female"))
+
+sex
+
+#Se obtiene el número de niveles del factor
+nlevels(sex)
+
+```
+
+#### Orden de los niveles de  Factores
+Cuando los factores son cualitativos el orden no es importante, pero cuando son ordinales, es importante indicar el correspondiente orden de los niveles o categorías del factor:
+
+```{r E12,exercise=T}
+
+
+food <- factor(c("low", "high", "medium", "high", "low", "medium", "high"))
+levels(food)
+```
+
+
+Notese, como las categorías están en desorden.Para corregirlo se utiliza el argumento `ordered=TRUE` dentro de `factor()`
+
+```{r E13,exercise=T}
+
+food <- factor(c("low", "high", "medium", "high", "low", "medium", "high"))
+
+food <- factor(food, levels = c("low", "medium", "high"), ordered = TRUE)
+levels(food)
+
+```
+

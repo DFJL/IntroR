@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1555991919861.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "FE0D00A6",
+    "lastKnownWriteTime" : 1555995291,
+    "last_content_update" : 1555995291326,
+    "path" : "/cloud/project/CursoR/Clase1/Presentaciones/RstudioCloud.Rmd",
+    "project_path" : "CursoR/Clase1/Presentaciones/RstudioCloud.Rmd",
+    "properties" : {
+        "cursorPosition" : "13,50",
+        "scrollLine" : "11",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
