@@ -1,0 +1,270 @@
+---
+title: "Clase 2:Introducción a R"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    includes:
+      in_header: google-analytics.html
+runtime: shiny_prerendered
+theme: united
+description: >
+  Clase 2 de introducción a R.Incluye estructuras de datos(matrices,dataframes y listas).
+---
+
+```{r setup, include=FALSE}
+
+library(stringr) 
+library(purrr)
+library(learnr)
+library(knitr)
+library(lubridate)
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE, message = FALSE,fig.width =10 , fig.height = 8)
+tutorial_options(exercise.timelimit = 120)
+knit_hooks$set(optipng = hook_optipng)
+knit_hooks$set(pngquant = hook_pngquant)
+
+
+#Needed objects for examples
+ojos <- factor(c("Azules", "Marrones", "Marrones"), levels = c("Azules", "Marrones", 
+    "Verdes", "Negros"))
+
+
+#Posteriormente se mezcla todo en un solo dataframe
+
+datos <- data.frame(Color.ojos = ojos, Peso = c(68, 75, 88), Altura = c(1.65, 
+    1.79, 1.85))
+
+
+matriz1<- matrix(data=seq(1,9),nrow=4,ncol= 3,byrow=FALSE)
+
+
+#vector de ejemplo
+x1<- c(1,2,3,4,5)
+
+#Se define la lista con objetos creados previamente
+lista1<-list(vector=x1,matriz=matriz1,dataframe=datos)
+
+
+```
+
+![](https://www.tec.ac.cr/sites/default/files/media/branding/logo-tec.png){width="289"}
+
+## 1- Matrices
+
+En R, una matriz es una colección de datos del mismo tipo(numérico,carácter o lógico).A diferencia de los vectores, son bidimensionales, ya que tienen filas y columnas.Se utiliza la función `matrix()` para construir una matriz.
+
+```{r E01,exercise=T}
+
+#Se genera una matriz cuya data se encuentra en el argumento data, definida por el número 
+# de filas nrow y el número de columnas ncol.El argumento byrow indica la forma que se desea
+# popular la matriz.
+matriz1<- matrix(data=seq(1,9),nrow=4,ncol= 3,byrow=FALSE)
+matriz1
+
+```
+
+Para obtener las dimensiones de la matriz se realiza mediante `dim()` :
+
+```{r E0,exercise=T}
+
+matriz1<- matrix(data=seq(1,9),nrow=4,ncol= 3,byrow=FALSE)
+dim(matriz1)
+
+```
+
+### Indices de matrices
+
+De igual manera que con los vectores, se pueden obtener valores específicos de las matrices mediante sus índices.La regla es matriz[f,c] donde fila es el número de fila deseado y c es el número de columna
+
+```{r E1,exercise=T}
+
+matriz1<- matrix(data=seq(1,9),nrow=4,ncol= 3,byrow=FALSE)
+
+#Devuelve la posición fila 1 y columna 1
+matriz1[1,1]
+
+#Devuelve toda la columna uno, independientemente de la fila
+matriz1[,1]
+
+#Devuelve toda la fila uno, independientemente de la columna
+matriz1[1,]
+
+#Devuelve las filas 1 a 2 de las columnas 2 y 3
+matriz1[1:2, 2:3]
+
+
+```
+
+## 2- Dataframes
+
+Los dataframes se diferencian de las matrices básicamente en dos aspectos:
+
+-   Puede almacenar distintos tipos de datos.
+
+-   Las filas son observaciones y las columnas con variables.
+
+### Funciones útiles sobre data frames.
+
+R tiene por defecto algunos dataframes embedidos para analizar datos.Por ejemplo, vamos a analizar `mtcars`:
+
+```{r E2,exercise=T}
+
+#Visualizar el dataframe mtcars
+mtcars
+
+# clase del objeto
+
+class(mtcars)
+
+# Visualizar estructura de los datos del dataframe
+
+str(mtcars)
+
+# Generar un resumen estadístico
+
+summary(mtcars)
+
+# Nombres de columnas
+
+names(mtcars)
+
+#El comando head y tail, generan una muestra de los primeros y últimos registros respectivamente
+
+head(mtcars,5)
+
+tail(mtcars,10)
+
+
+```
+
+### Crear dataframes
+
+La función `dataframe` y `as.dataframe` crean y convierte a dataframe respectivamente:
+
+```{r E3,exercise=T }
+
+#Primero, se generan datos con la función factor:
+
+ojos <- factor(c("Azules", "Marrones", "Marrones"), levels = c("Azules", "Marrones", 
+    "Verdes", "Negros"))
+ojos
+
+#Posteriormente se mezcla todo en un solo dataframe
+
+datos <- data.frame(Color.ojos = ojos, Peso = c(68, 75, 88), Altura = c(1.65, 
+    1.79, 1.85))
+datos
+
+#Además, podemos convertir la matriz a dataframe
+
+matriz1<- matrix(data=seq(1,9),nrow=4,ncol= 3,byrow=FALSE)
+datos2<- as.data.frame(matriz1)
+datos2
+
+#Y le incluimos nombres a las columnas
+
+names(datos2)<- c("Alajuela","San Pedro","TEC")
+
+datos2
+
+#Si queremos visualizar solo una columna, alternativamente se puede usar dataframe$columna
+
+columna1<- datos2$Alajuela
+columna1
+
+
+```
+
+Podemos ver más de dataframes en <https://monashdatafluency.github.io/r-intro-2/data-frames.html>
+
+## 3- Listas 
+
+Finalmente tenemos las listas.Las listas son colecciones de objetos que pueden guardar a su vez muchos objetos de diverso tipos.Por ejemplo, el primer objeto puede ser un vector, el segundo una matriz y el tercero un dataframe.Estas son muy útiles para los resultados de funciones más complejas que veremos posteriormente en el curso.
+
+```{r E4,exercise=T }
+
+#vector de ejemplo
+x1<- c(1,2,3,4,5)
+
+#Se define la lista con objetos creados previamente
+lista1<-list(vector=x1,matriz=matriz1,dataframe=datos)
+
+#Se visualiza los resultados de la lista
+lista1
+
+#Se observan los nombres de los objetos
+
+names(lista1)
+  
+```
+
+Existen varias maneras de obtener los objetos de una lista, como las siguientes:
+
+```{r E5,exercise=T }
+
+#Obtener el objeto con el comando $
+
+lista1$matriz
+
+#Alternativamente se usan corchetes dobles
+
+lista1[[2]]
+
+#Si además queremos visualizar u obtener valores dentro un objeto específico de la lista, se puede realizar lo siguiente
+
+#Esto devuelve, para el objeto 2 de la lista(la matriz),toda la fila 1.
+lista1[[2]][1,]
+  
+```
+
+Es importante mencionar, que a una lista se le pueden ir agregando nuevos objetos así surja la necesidad:
+
+```{r E6,exercise=T}
+
+#Se indica que se va a guardar en el índice 4 de la lista(el cuál esta "vacío") un nuevo objeto 
+# de tipo caracter.
+
+lista1[[4]]<- c("Esto es un nuevo objeto")
+
+lista1
+  
+```
+
+## Paquetes
+
+R cuenta con un amplio repertorio de adiciones al lenguaje base llamados "paquetes" o "librerías", los cuáles son creados por diversos tipos de usuarios para múltiples propósitos.
+
+Existe un repositorio oficial llamado [CRAN]([https://cran.r-project.org/)](https://cran.r-project.org/)) de donde se pueden descargar versiones estables de los paquetes.Además existen otros repositorios no oficiales como [Github]([https://github.com)](https://github.com)) en donde los desarrolladores tienen sus versiones de prueba, pero con mayores características, dado que son versiones nuevas de los paquetes que aún no salen a producción.
+
+Veremos brevemente la forma de instalar y cargar paquetes, de manera clásica y de manera dinámica para identificar cuando un paquete se encuentra o no instalado e instalar automáticamente:
+
+```{r E7,exercise=T}
+
+#Instalar un paquete de prueba
+
+#install.packages("ggplot2")
+
+#Una vez instalado el paquete, se debe cargar en el ambiente de R para oder utilizar sus funciones
+
+library(ggplot2)
+
+##Instalar y cargar de manera automatica
+
+##Primero se crea un objeto con los paquetes que se desean instalar/cargar
+
+paquetes<- c("ggplot2","lubridate")
+
+##Aplica un ciclo iterativo para comprobar el estado de cada paquete e instalar si corresponde
+
+ for (i in paquetes){
+   if (i %in% installed.packages()[,"Package"] == FALSE){
+     install.packages(i,repos="http://cran.rstudio.com/");
+   }
+ }
+
+#Carga los paquetes sin generar mensajes o warnings
+
+sapply(paquetes,library,character.only=TRUE,quietly=T)
+
+```
