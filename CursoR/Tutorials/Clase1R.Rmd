@@ -337,3 +337,35 @@ food <- factor(food, levels = c("low", "medium", "high"), ordered = TRUE)
 levels(food)
 
 ```
+
+## Su turno
+
+### Laboratorio Grupal
+
+Realice los siguientes ejercicios en un script de R(con los nombres de los etudiantes y grupo) e imprima los resultados de todos los ejercicios en consola:
+
+1.  Cree un vector llamado "Nombres" que contenga los nombres y apellidos de los integrantes del grupo.
+
+2.  Cree otro vector llamado "Hijos" que contenga el número de hijos de cada integrante del grupo.( en el mismo orden del vector del ejercicio 1).
+
+3.  Cree un vector llamado "Casado" que contenga valor lógico Verdadero/Falso si está casado o no de cada integrante del grupo.
+
+4.  Cree un vector tipo factor llamado "TipoCelular" que contenga el tipo de celular de cada integrante del grupo (Iphone, android, otro).
+
+5.  Cree un factor ordenado llamado "Ejercicio" que contenga la cantidad de ejercicio realizada por el estudiante(Nada, Algo, Mucho).
+
+    Guía: Nada=0 dias, Algo=1 a 2 dias, Mucho=mas de 2 dias a la semana
+
+6.  Utilice la función adecuada para conocer el tipo de datos de cada vector creado en los ejercicios anteriores.
+
+7.  Mediante índices de vectores, cree un nuevo vector que contenga solo el último valor de los vectores anteriores.Este vector debe contener la información del último estudiante de todos los vectores creados en los ejercicios del 1-4(excepto el 3).
+
+8.  Utilice la función `paste0` para desplegar la información del vector anterior.Por ejemplo
+
+    `paste0("El nombre del estudiante es: ", Nombre[?],"tiene ", Hijos[?]," hijos",etc...)`
+
+9.  Mediante índices de vectores y operadores lógicos, cree un nuevo vector que contenga solo los integrantes del grupo que tengan hijos.
+
+10. Mediante índices de vectores y operadores lógicos, cree un nuevo vector que contenga solo integrantes que son casados.
+
+    **Envíe los documentos al PCC Virtual en el espacio habilitado para este laboratorio.**
