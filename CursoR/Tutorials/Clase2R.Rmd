@@ -62,6 +62,11 @@ En R, una matriz es una colección de datos del mismo tipo(numérico,carácter o
 matriz1<- matrix(data=seq(1,9),nrow=4,ncol= 3,byrow=FALSE)
 matriz1
 
+a <- c(1,2,3)
+b <- c(1000,1500,2000)
+c <- c(50.5,89,94)
+
+
 ```
 
 Para obtener las dimensiones de la matriz se realiza mediante `dim()` :
@@ -71,6 +76,27 @@ Para obtener las dimensiones de la matriz se realiza mediante `dim()` :
 matriz1<- matrix(data=seq(1,9),nrow=4,ncol= 3,byrow=FALSE)
 dim(matriz1)
 
+```
+
+### Nombres de filas y columnas
+
+Las estructuras de tipo matriz tienen nombres de filas y nombres de columnas para poder referenciar,mediante el argumento `dimnames` de la función `matrix`:
+
+```{r E0b,exercise=TRUE}
+
+#Definir datos de la matriz
+datos <- c(1:12)
+
+# Definir nombres de filas y columnas
+
+rownames = c("row1", "row2", "row3", "row4")
+colnames = c("col1", "col2", "col3")
+
+# Crear la matriz
+
+matriz <- matrix(datos, nrow = 4, byrow = TRUE, dimnames = list(rownames, colnames))
+
+matriz
 ```
 
 ### Indices de matrices
@@ -93,6 +119,29 @@ matriz1[1,]
 #Devuelve las filas 1 a 2 de las columnas 2 y 3
 matriz1[1:2, 2:3]
 
+
+```
+
+**Su Turno:**
+
+1.  Genere una matriz cuyos datos sean el vector numérico que se presenta en la consola.Los `rownames` deben ser "atleta1", "atleta2",etc...Y los `colnames` deben ser "Medicion1",Medicion2",etc....La matriz debe llenarse por fila.
+
+2.  Extraiga los datos solo del tercer atleta.
+
+3.  Extraiga los datos solo de la última medición.
+
+4.  Extraiga el dato del primer atleta en la última medición.
+
+```{r E1b,exercise=TRUE}
+
+
+```
+
+```{r E1b-hint-1}
+
+#Son 4 atletas en total.
+
+data <- c(22,24,20,14,14,12,10,8,7,21,16,14)
 
 ```
 
@@ -178,7 +227,7 @@ columna1
 
 Podemos ver más de dataframes en <https://monashdatafluency.github.io/r-intro-2/data-frames.html>
 
-## 3- Listas 
+## 3- Listas
 
 Finalmente tenemos las listas.Las listas son colecciones de objetos que pueden guardar a su vez muchos objetos de diverso tipos.Por ejemplo, el primer objeto puede ser un vector, el segundo una matriz y el tercero un dataframe.Estas son muy útiles para los resultados de funciones más complejas que veremos posteriormente en el curso.
 
@@ -231,11 +280,11 @@ lista1
   
 ```
 
-## Paquetes
+## 4- Paquetes
 
 R cuenta con un amplio repertorio de adiciones al lenguaje base llamados "paquetes" o "librerías", los cuáles son creados por diversos tipos de usuarios para múltiples propósitos.
 
-Existe un repositorio oficial llamado [CRAN]([https://cran.r-project.org/)](https://cran.r-project.org/)) de donde se pueden descargar versiones estables de los paquetes.Además existen otros repositorios no oficiales como [Github]([https://github.com)](https://github.com)) en donde los desarrolladores tienen sus versiones de prueba, pero con mayores características, dado que son versiones nuevas de los paquetes que aún no salen a producción.
+Existe un repositorio oficial llamado [CRAN](%5Bhttps://cran.r-project.org/)](<https://cran.r-project.org/>)) de donde se pueden descargar versiones estables de los paquetes.Además existen otros repositorios no oficiales como [Github](%5Bhttps://github.com)](<https://github.com>)) en donde los desarrolladores tienen sus versiones de prueba, pero con mayores características, dado que son versiones nuevas de los paquetes que aún no salen a producción.
 
 Veremos brevemente la forma de instalar y cargar paquetes, de manera clásica y de manera dinámica para identificar cuando un paquete se encuentra o no instalado e instalar automáticamente:
 
@@ -268,3 +317,25 @@ paquetes<- c("ggplot2","lubridate")
 sapply(paquetes,library,character.only=TRUE,quietly=T)
 
 ```
+
+## Su Turno: Laboratorio Grupal
+
+1.  Consolide los datos recolectados en el laboratorio anterior y genere un dataframe con esos datos.Las columnas deben tener un nombre coherente con respecto a los datos recopilados.
+
+2.  Obtenga las dimensiones del dataframe en cuanto a filas y columnas y guardelas en un objeto.
+
+3.  Investigue una función que extraiga los `colnames` del dataframe para corroborar que están correctos de acuerdo a su diseño.Guarde el resultado en un objeto.
+
+4.  Utilice una función utilizada en el tutorial para explorar la estructura del dataframe.Guarde el resultado en un objeto.
+
+5.  Utilice una función utilizada en el tutorial para explorar el resumen estadístico del dataframe.Guarde el resultado en un objeto.
+
+6.  Extraiga solamente la columna correspondiente a la columna "Casado" y guardela en un vector, mediante el operador `$`
+
+7.  Extraiga los datos del último estudiante (mediante índices) y guardelos en un vector.
+
+8.  Cree una lista que contenga en su primer elemento el dataframe del ejercicio 1.En los siguientes elementos debe contener los objetos guardados en los ejercicios del 2 al 5.
+
+9.  Que información contiene esta lista?
+
+10. Extraiga el último elemento de la lista generada.
