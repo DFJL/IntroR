@@ -1,0 +1,13 @@
+name: Clase3
+title: Clase3
+username:
+account: dfjl1986
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3904130
+bundleId: 4425566
+url: https://dfjl1986.shinyapps.io/Clase3/
+when: 1617400601.70532
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Clase1R.html|Clase1R.Rmd|Clase2R.html|Clase2R.Rmd|Clase3.html|Clase4.html|Clase4.Rmd

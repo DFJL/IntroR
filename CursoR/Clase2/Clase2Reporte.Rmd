@@ -1,0 +1,121 @@
+---
+title: "Reporte de Clase Número 2"
+author: "Felipe Jiménez"
+date: "`r format(as.Date(Sys.time()))`"
+output: pdf_document
+---
+
+# Instrucciones
+
+- Genere un documento R markdown para resolver los ejercicios.
+- En su documento R markdown, incluya como texto el enunciado del ejercicio y en el chunk incluya el código y los resultados.
+- Para cada ejercicio, pruebe al menos 3 diferentes escenarios de resultados.
+- Además, deben crear un proyecto privado en R Studio Cloud, dar acceso a  todos los miembros del equipo y al profesor.
+- Suba a classroom únicamente el link de Rpubs del documento renderizado  con los las funciones requeridas y resultados (impresos en el reporte) para resolver los ejercicios.
+
+# Ejercicios
+
+
+1- Cree una función que calcule el área de un triángulo rectángulo.
+
+2- Cree una función que permita convertir de grados centígrados a Fahrenheit.
+
+3-Cree una función que permita al usuario:
+
+- Convertir de gramos a libras, de metros a millas y de grados centigrados a Fahrenheit.
+- Introducir el valor a convertir.
+- Devuelva el valor en función de lo escogido por el usuario.
+
+**Ejemplo**
+
+`convertidor("gramos a libras",2500)`
+
+4- Cree una función que tenga como argumento un vector de paquetes y que verifique si los paquetes
+se encuentren instalados.Si no se encuentran instalados, la función debe de encargarse de instalarlos y posteriormente debe cargar todos los paquetes del vector.
+
+5- Investigue sobre el índice BigMac y genere lo siguiente:
+
+- Descargue la información del índice de Big Mac del siguiente
+[link:](https://raw.githubusercontent.com/TheEconomist/big-mac-data/master/output-data/big-mac-full-index.csv).
+- A continuación diseñe una función que reciba como argumentos el objeto del dataset creado desde el punto anterior.
+- El segundo argumento debe ser un vector con el nombre de dos países a comparar, deseados por el usuario.
+- Brinde como resultado un mensaje de texto que indique la comparación del valor del índice de Big Mac para los dos países.Por ejemplo: "El índice de Big Mac para Costa Rica es de 5$ dólares y para Nicaragua es de 2$ dolares."
+
+
+```{r,message=F}
+
+#Ejemplo  guía ejercicio 5
+
+library(dplyr)
+
+#Datos
+
+datavalor<- c(1,2,3,4)
+
+datanombre <-c("a","b","c","d")
+
+data<- data.frame(valor=datavalor,nombre=datanombre,stringsAsFactors = F) 
+#Poner stringsAsFactors = F a efectos de no complicar el ejercicio, 
+#ya que en ocasiones cuando se lee como factor puede complicar 
+#a la hora de convertir a character.
+
+#Nombre a seleccionar
+nombreselect<- "a"
+
+#Filtrar el valor de nombreselect
+nombre1<- data %>%
+  select(nombre) %>% #Selecciona columna de interes
+  filter(nombre==nombreselect) %>% #Filtra por los valores de interés
+  as.character() #Convierte para tener un objeto de tipo character 
+#en lugar de un dataframe para poder poner en el mensaje de texto.
+
+nombre1
+
+ #Obtener el valor de nombre1
+
+valor1<- data %>%
+  filter(nombre==nombreselect) %>%
+  select(valor) %>%
+  as.numeric()
+
+valor1
+
+paste0("El valor de ", nombreselect, " es de ", valor1)
+
+```
+
+6- Para la siguiente función:
+
+```{r,eval=F}
+
+
+split_data <- function(df, train = TRUE,percentage){
+  length<- nrow(df)
+  total_row <- length *percentage
+  split <- 1:total_row
+  if (train =TRUE){ 
+    train_df <- dataframe[split, ] 
+      return(train_df)		
+  } else {
+    test_df <- df[-split, ] 
+      return(test_df)		
+  }
+}
+
+```
+
+- Indique linea por línea y de manera general cuál es la funcionalidad y propósito de la misma.
+- Corrija el(los) error(es) que contiene la función.
+- Compile la función corregida y pruebe con un dataset de su escogencia.
+
+---------------------------------------------------------------------------------------------------
+
+
+**Tarea**
+
+Luego de la resolución de los ejercicios, el profesor escogerá  al azar por cada grupo un representante para que **en clase** explique como se resolvió uno de los ejercicios, escogido también al azar.De tal manera que cada grupo exponga un ejercicio solamente.
+
+**Sugerencias**
+
+- Resuelva primero el problema solicitado, luego diseñe la función reemplazando valores específicos, por valores programáticos.
+- Para el ejercicio 5, puede utilizar el paquete `dplyr`, para el procesamiento de la información del dataset(puede cargar el paquete dentro de la función,cerciorarse que se encuentra instalado)

@@ -11,7 +11,7 @@ A este momento, el repositorio contiene 5 tutoriales con la siguiente temática:
 |----------|--------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
 | Clase 1  | Introducción a R.Tipos de Datos y estructuras de Datos(Vectores y Factores). | [Clase 1](https://dfjl1986.shinyapps.io/Clase1R/) |
 | Clase 2  | Tipos de Estructuras de Datos( Matrices, dataframes y listas)             | [Clase 2](https://dfjl1986.shinyapps.io/Clase2R/)                                                                                                                 |
-| Clase 3  | Introducción a Funciones y sentencias `if`                | TBD                                                                                                                 |
+| Clase 3  | Introducción a Funciones y sentencias `if`                | [Clase 3](https://dfjl1986.shinyapps.io/Clase3/)                                                                                                                 |
 | Clase 4  | Sentencias  `if` en funciones/ Ciclos `for`  | TBD                                                                                                                 |
 
 

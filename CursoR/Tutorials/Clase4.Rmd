@@ -1,0 +1,249 @@
+---
+title: "Clase 3:Introducción a R"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+    includes:
+      in_header: google-analytics.html
+runtime: shiny_prerendered
+theme: united
+description: >
+  Clase 3 de introducción a R.Introducción al diseño de funciones.
+---
+
+```{r setup, include=FALSE}
+
+library(stringr) 
+library(purrr)
+library(learnr)
+library(knitr)
+library(lubridate)
+knitr::opts_chunk$set(echo = TRUE,warning = FALSE, message = FALSE,fig.width =10 , fig.height = 8)
+tutorial_options(exercise.timelimit = 120)
+knit_hooks$set(optipng = hook_optipng)
+knit_hooks$set(pngquant = hook_pngquant)
+
+
+df <- data.frame(Alajuela = round(runif(10,0,20000)),
+                 Saprissa = round(runif(10,0,20000)),
+                 Cartago = round(runif(10,0,5000)),
+                 Heredia = round(runif(10,0,10000)),
+                 PerezZeledon = round(runif(10,0,8000)),
+                 SanCarlos = round(runif(10,0,6000)),
+                 Grecia = round(runif(10,0,5000)),
+                 UCR = round(runif(10,0,500)),
+                 Carmelita= round(runif(10,0,500)),
+                 Guadalupe = round(runif(10,0,1500)),
+                 Limon = round(runif(10,0,4500))
+                 )
+
+
+montoPromedio <- function(vector,precio){ # dentro de "function" se incluyen los argumentos de la función
+  
+  # Cuerpo de la función
+  
+  calculo<- sum(vector)*precio/length(vector)
+  calculop <- paste0("El valor promedio es de ", calculo)
+  
+  # En return se incluye el resultado deseado que la función debe guardar
+  # Cuando se tienen varios resultados se pueden guardar en una lista
+  
+  return(calculop)
+}
+
+```
+
+![](https://www.tec.ac.cr/sites/default/files/media/branding/logo-tec.png){width="289"}
+
+## Manejando la sentencia `if` en funciones
+
+Supongamos que en los datos generados de equipos de fútbol, queremos conocer si un equipo tuvo más asistencia que otro.Para esto podemos programar una función:
+
+```{r if7,eval=FALSE}
+
+if ( test_expression1) {
+statement1
+} else if ( test_expression2) {
+statement2
+} else if ( test_expression3) {
+statement3
+} else {
+statement4
+}
+
+```
+
+Siguiendo el mismo ejemplo:
+
+```{r if8,exercise=TRUE}
+
+
+compara<- function(columna1,columna2,df){
+  
+  if(sum(df[,columna1])>sum(df[,columna2])){
+    
+    result<- names(df)[columna1]
+  }
+  
+  else if(sum(df[,columna1])<sum(df[,columna2])){
+    
+    result<- names(df)[columna2]
+    
+  }
+    
+  else {
+    
+    result<- c("Equipos tuvieron misma asistencia")
+    
+  }
+  
+  return(result)
+  
+}
+
+compara(1,2,df)
+
+compara(2,2,df)
+
+compara(3,4,df)
+
+```
+
+## Función `if` con más de un resultado
+
+Podemos programar una función para que tenga como resultado más de un elemento.Por ejemplo, queremos tener una función que calcule la correlación entre dos vectores, pero que a su vez de la opción al usuario de plotear el scatterplot:
+
+```{r if9,exercise=TRUE}
+
+cor.plot <- function(x, y, plotear = FALSE) {
+    if (plotear == TRUE) 
+        plot(x, y)
+    return(cor(x, y))
+}
+
+#Evaluar función
+
+vec1 <- runif(50)
+vec2 <- rnorm(50)
+
+#Sin definir el argumento "plotear"
+cor.plot(vec1, vec2)
+#Definiendo "plotear"==TRUE
+cor.plot(vec1, vec2, plotear=TRUE)
+#Definiendo "plotear"==FALSE
+cor.plot(vec1, vec2, plotear=F)
+
+```
+
+Alternativamente, se pueden almacenar todos los elementos de la función como una lista dentro de `return` :
+
+```{r if10,exercise=TRUE}
+
+cor.plot2 <- function(x, y, plotear = FALSE) {
+    if (plotear == TRUE) 
+        
+    return(list(correlacion=cor(x, y),plot=plot(x, y)
+                )
+           )
+}
+
+#Evaluar función
+
+vec1 <- runif(50)
+vec2 <- rnorm(50)
+
+cor.plot2(vec1, vec2, plotear=TRUE)
+
+```
+
+Otro ejemplo de función con la función `if`, es generando argumentos en los que el usuario pueda escoger el procedimiento a seguir:
+
+```{r if11,exercise=TRUE}
+
+
+
+#Crea función con argumento "función"  de varias opciones
+calcula <- function(x, y, funcion = c("multiplica","suma")) {
+  if (funcion == "multiplica") {
+    res<- x*y
+    return(res)
+  }
+  
+  else{ res2<-x+y
+  res2}
+}
+
+#Datos de ejemplo
+x<-rnorm(10)
+
+y<-rnorm(10)
+
+x
+y
+
+#Cálcula función con ambas opciones
+
+calcula(x,y,funcion = "multiplica")
+
+calcula(x,y,funcion = "suma")
+
+
+```
+
+## Ciclo `for` en R
+
+Como se ha venido explicando, en el análisis de datos usualmente nos enfrentamos a situaciones tediosas o repetitivas que en algunas ocasiones se pueden volver imporsibles ejecutar de manera manual.En esas situaciones es donde entre en juego los ciclos.En este curso vamos a introducir el ciclo `for` que pasa iterativamente por cada uno de los elementos que se le indique y ejecuta una acción hasta que haya recorrido todos los elementos.
+
+El siguiente es el diagrama del ciclo `for`:
+
+[![](https://cdn.datamentor.io/wp-content/uploads/2017/11/r-for-loop.jpg "Flujograma del ciclo For")](Flujograma%20del%20ciclo%20For)
+
+Volviendo al ejemplo de la asiatencia de los equipos de fútbol, supongamos que debemos crear un reporte con el monto promedio por partido que cada equipo tuvo( con la ayuda de la función `montoPromedio` que ya calculamos) e imprimir en pantalla el resultado para cada uno.
+
+```{r for1,exercise=TRUE}
+
+#Definir el límite superior del ciclo for
+n<-ncol(df)
+
+for(i in 1:n){
+  suma<-montoPromedio(df[,i],precio=5000)
+  concat<-paste0(names(df)[i],":",suma)
+  print(concat)
+}
+
+```
+
+La mejor manera de entender que está sucediendo en el ciclo, es leyendolo de la siguiente manera: "**Para cada i**(donde i es el índice del elemento que el ciclo se encuentra evaluando) **desde 1 hasta n** (el número de columnas de df) , calcule y guarde:
+
+1.  suma como resultado de la función montoPromedio y
+2.  además calcule y guarde concat como resultado de la concatenación de names(df) y suma y
+3.  finalmente imprima concat".
+
+## Su turno: Laboratorio Grupal
+
+1.  Cree una función que retorne la suma de dos números enteros.
+
+2.  Cree una función que retorne `TRUE` si existe algún entero dentro de un vector.Puede utilizar las funciones `is.numeric()` y `as.numeric()` para resolverlo.
+
+3.  Cree una función que dado un vector numérico imprima el promedio, valores máximo y mínimo de dicho vector.
+
+4.  Cree una función en la que dado un dataframe, devuelva en varios elementos de una lista: a) la estructura del dataframe, b) resumen estadístico, c) top n de observaciones(n debe ser un parámetro de entrada de la función).
+
+5.  Ejecute, evalue y corrija el siguiente codigo:
+
+```{r final, eval=F}
+
+a <- 200
+b <- 33
+
+if (b > a) {
+  print("b is greater than a")
+} else if(a == b) 
+  print("a and b are equal")
+} else {
+  print("a is greater than b")
+}
+  }
+
+```

@@ -1,0 +1,566 @@
+---
+title: \vspace{3.5in}"Importar Archivos y manejo de Strings"
+author: "Felipe Jiménez"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: 
+  html_document:
+    toc: true # table of content true
+    toc_float: true
+    toc_depth: 4  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: united  # many options for theme, this one is my favorite.
+    highlight: tango  # specifies the syntax highlighting style
+---
+
+<img src="logo.png" style="position:absolute;top:0px;right:0px;" />
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#install.packages("kableExtra") Mejor renderización de tablas
+
+library(kableExtra)
+
+```
+
+# Importar datos en R
+
+Hasta el momento solamente hemos visto como importar archivos .csv en R, desde un ambiente local.Para esta clase vamos a recorrer como importar  en R otro tipo de archivos y además como leerlos directamente desde una página web por ejemplo.
+
+## Archivos .txt
+
+Con la función `read.table()` se puede fácilmente leer archivos de extensión .txt.En el siguiente ejemplo veremos como leer este tipo de archivo desde una dirección web:
+
+```{r txt}
+
+df <- read.table(file = "https://s3.amazonaws.com/assets.datacamp.com/blog_assets/test.txt", 
+                 header = FALSE)
+df
+
+
+```
+
+Idealmente, en el argumento `file`, se debe pasar solamente el nombre y la extensión del archivo, ya que el `working directory` ya se debería haber configurado previamente.Al usar esta función, por defecto el objeto se convierte en un dataframe.
+
+
+## Lectura de .csv
+
+Si un archivo de texto esta separado por "," o ";", usualmente se lee como un archivo de extensión .csv.Para esto se utiliza la función `read.csv` :
+
+```{r csv}
+
+df <- read.csv("https://s3.amazonaws.com/assets.datacamp.com/blog_assets/test.csv",
+               header = TRUE)
+
+df
+
+```
+
+
+## Lectura de un archivo delimitado por otro caracter
+
+Si el archivo de texto está separado por otro caracter que no sea tab, "," o ";", existe la función `read.delim()` como variante a `read.table()`
+
+```{r delim}
+
+df <- read.delim("https://s3.amazonaws.com/assets.datacamp.com/blog_assets/test_delim.txt", sep="$") 
+
+
+df
+
+```
+
+
+## Importar y leer datos de excel
+
+Para los ex amantes de excel, R también provee una forma sencilla y flexible de leer datos en este formato.Para esto vamos a utilizar el paquete `readxl` para facilitar la manipulación:
+
+```{r excel}
+
+#install.packages("readxl")
+library(readxl)
+library(dplyr)
+
+setwd("/cloud/project/CursoR/Clase4")
+
+exceldf <- read_excel("DGAC_Tipos de Procedimientos 2017-2018.xlsx")
+
+head(exceldf)
+
+
+```
+
+Este paquete a su vez permite realizar algunas otras acciones de manipulación de archivos de excel:
+
+```{r excel2}
+
+#Leer excel de ejemplo
+xls_example <- readxl_example("datasets.xls")
+read_excel(xls_example)
+
+#Listar las hojas del excel
+excel_sheets(xls_example)
+
+# Leer una hoja específica por su nombre
+read_excel(xls_example, sheet = "chickwts")
+
+# Leer una hoja según su índice
+read_excel(xls_example, sheet = 4)
+
+#Leer datos según el rango en diferentes formatos
+read_excel(xls_example,sheet = 1, range = "C1:E4")
+
+read_excel(xls_example, range = cell_rows(1:4))
+
+read_excel(xls_example, range = cell_cols("B:D"))
+
+read_excel(xls_example, range = "mtcars!B1:D5")
+
+# Si el valor de NA, se encuentra en los datos diferente a espacio vacíos, se pueden configurar valores
+# personalizados en la función
+
+read_excel(xls_example, na = "setosa")
+
+
+```
+
+## Lectura de otros tipos de archivos
+
+A continuación se brinda una guía para la lectura de otro tipo de archivos:
+
+| Tipo de archivo      | Paquete | Descripción     |
+| :----:        |    :----:   |          :--- |
+| JSON     | `rjson`       | `JsonData <- fromJSON(file= "<filename.json>" )`   |
+| xml  | `XML`       | `xmlfile <- xmlTreeParse("<Your URL to the XML data>")`      |
+| html  | `RCurl`   y `XML`    | `urldata <- getURL(url)data <- readHTMLTable(urldata,stringsAsFactors = FALSE)`     |
+| SAS,SPSS,etc  | `foreign`       | `mySPSSData <- read.spss("example.sav")`      |
+
+
+
+# Manipulación de Strings en R
+
+En el análisis de datos, una herramienta esencial y una habilidad muy favorable es el correcto manejo de datos de texto para el procesamiento y sintesis de los datos.
+
+Para esto, vamos a utilizar como base el paquete `stringr` que contiene muchas funciones para facilitar el trabajo con string o datos textuales.Es importante mencionar que el R `base` contiene muchas de las funciones que cumplen objetivos similares a las que se pueden ejecutar con este paquete, pero se hará énfasis en la funciones del paquete para mantener la estandarización.
+
+Además, vamos a utilizar el dataset de registro de tumores de la CCSS:
+
+```{r stringr}
+
+#install.packages("stringr")
+library(stringr)
+
+salud <- read.csv("salud.csv",sep=";")
+
+kable(head(salud,10)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+  scroll_box(width = "900px", height = "500px")
+
+
+```
+
+## Concatenación de strings
+
+Vamos a repasar la funcionalidad de `paste`´y `paste0`.Estas funciones sirven en esencia para concatenar varios strings.La sintaxis básica es como sigue:
+
+`paste(..., sep = " ", collapse = NULL)`
+
+- `...` representa cualquier número de strings o vectores a ser combinados.
+
+- `sep` representa el caracter de separación entre elementos y es opcional.
+
+- `collapse` es usado para eliminar el espacio entre dos strings.
+
+```{r paste}
+
+#Crear en una sola columna provincia+ cantón
+
+
+salud <- salud %>%
+  mutate(locacion = paste(PROVINCIA,CANTON,sep="-"),
+         locacion2 = str_c(CANTON,DISTRITO, sep = "- "))# El analogo de stringr
+
+
+kable(head(salud,10)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+   scroll_box(width = "900px", height = "500px")
+
+
+
+#Se puede usar la función if dentro de str_c
+
+name <- "Felipe"
+time_of_day <- "morning"
+birthday <- FALSE
+
+str_c(
+  "Good ", time_of_day, " ", name,
+  if (birthday) " and HAPPY BIRTHDAY",
+  "."
+)
+
+
+
+```
+
+
+## Delimitando strings
+
+Dentro de las funcionalidades básicas se encuentran las funciones para "recortar" ciertos strings, según patrones de inicio y finalización:
+
+```{r substring}
+
+salud <- salud %>%
+  mutate(raizCaso = str_sub(CODIGOCASO,1,3))# El analogo de stringr
+
+
+kable(head(salud,10)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+   scroll_box(width = "900px", height = "500px")
+
+
+
+```
+
+
+## Convertir de mayúscula a minúscula y viceversa
+
+```{r cases}
+
+salud <- salud %>%
+  mutate(sexo =  str_to_lower(str_sub(SEXO, 1, 1)))
+
+kable(head(salud,10)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+   scroll_box(width = "900px", height = "500px")
+
+
+
+```
+
+
+## Buscando patrones
+
+En el paquete existen tres funciones que pueden ser utilizadas para buscar patrones específicos en los datos:
+
+- `str_detect()`
+- `str_replace()`
+- `str_count()`
+
+
+```{r matches}
+
+#str_detect()
+# Responde a la pregunta: Contiene el string el patrón ingresado por el usuario?
+
+
+salud <- salud %>%
+  mutate(Hospital =  str_detect(NOMBREESTABLECIMIENTO,"HOSPITAL"))
+
+kable(head(salud,10)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+   scroll_box(width = "900px", height = "500px")
+
+
+#str_count()
+# Responde a la pregunta: Cuantas veces el patrón se encuentra en el string?
+
+salud <- salud %>%
+  mutate(HOSPITALCount =  str_count(NOMBREESTABLECIMIENTO,"HOSPITAL"))
+
+kable(head(salud,10)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"))%>%
+   scroll_box(width = "900px", height = "500px")
+
+
+#str_replace()
+# Reemplaza un patrón si existe match con el string
+
+salud <- salud %>%
+  mutate(NOMBREESTABLECIMIENTO =  str_replace(NOMBREESTABLECIMIENTO, "<cd>", ""))
+
+kable(head(salud,10)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover")) %>%
+   scroll_box(width = "900px", height = "500px")
+
+
+
+```
+
+## Partir strings
+
+Otra de las tantas formas de trabajar con strings es cuando un string se debe "partir" en varios en función de algún patrón:
+
+
+```{r split}
+
+#str_split
+
+
+nombres <- c("Box, George", "Cox, David")
+nombres_split <- str_split(nombres, pattern = fixed(", "), simplify = TRUE)
+primer <- nombres_split[, 2]
+apellido <- nombres_split[, 1]
+
+primer;apellido
+
+```
+
+
+*Ejercicio*
+
+1- Recopile los nombres y apellidos de los compañeros de su grupo, en un dataframe en una sola columna.
+
+2- Cambie el vector de nombres de, por ejemplo "Daenarys Acuña" a su forma abreviada "D. Acuña".
+
+
+## Expresiones regulares (`regex`)
+
+Existe una forma muy poderosa de realizar reconocimiento de patrones mediante el lenguaje de expresiones regulares.Combinando expresiones regulares con las funciones del paquete `stringr`, se puede incrementar el poder de la manipualción de strings exponencialmente.
+
+Vamos a utilizar primero la función `str_view` , cuya funcionalidad es visualizar el match entre el patrón y el string.Posteriormente se utilizarán las funciones ya revisadas, pero con patrones de `regex`.
+
+### Patrones básicos
+
+El patrón más básico es mediante el uso de strings:
+
+
+```{r regex1}
+
+#install.packages("htmlwidgets")
+
+library(htmlwidgets)
+
+# str_view se utiliza para observa el match del patrón
+x <- c("apple", "banana", "pear")
+str_view(x, "an")
+
+nombre<- str_to_lower(salud$NOMBREESTABLECIMIENTO[1:10])
+
+str_view(nombre,"hospital")
+
+
+```
+
+El siguiente nivel de complejidad lo agrega el patrón `.` que significa "cualquier caracter:
+
+```{r regex2}
+
+
+str_view(nombre,"hospital...")
+
+
+```
+
+Ahora bien, si `.` hace el match con cualquier caracter, como se realiza el match del caracter "." ?
+
+Para esto, se realiza la operación "escape" ( en inglés ) con el que se le indica a `regex` que se desea realizar el match de ese caracter en partricular.El "escape" se realiza con el caracter `\\`.Entonces, para realizar el match de "." se debe utilizar `\\.` .
+
+```{r regex3}
+
+
+str_view(nombre,"\\.")
+
+
+```
+
+*Notese que para el caracter "\" se debe utilizar el escape `\\\\`.Esto que debido para escribir el caracter "\" en R, se debe hacer `\\`.
+
+### Anchors
+
+Por defecto, las expresiones regulares realizan el match sobre cualquier parte del string.Para realizar el match al inicio o al final del string se utiliza:
+
+- `^` Para el match del comienzo del string.
+- `$` Para el match del final del string.
+```{r regex4}
+
+diagnostico<-str_trim(str_to_lower(as.character(salud$BASEDIAGNOSTICO[1:10])))
+
+str_view_all(nombre,"^hospital")
+
+str_view_all(diagnostico,"clinica$")
+
+
+```
+
+Para recordar cual es cual, recuerde lo siguiente:
+"Si usted empieza con el poder `^` termina con el dinero `$`.
+
+### Otros patrones
+
+Existen algunos patrones especiales para realizar el match de más de un caracter:
+
+`\\d`: cualquier dígito.
+`\\s`: cualquier espacio blanco (space, tab, newline).
+`[abc]`: match a, b, or c.
+`[^abc]`: match cualquier cosa excepto a, b, or c.
+`[w]`: match cualquier palabra
+
+
+```{r regex5}
+
+
+str_view_all(salud$CODIGOCASO[1:10],"\\d")
+
+str_view_all(nombre,"\\s")
+
+str_view_all(nombre,"\\w")
+
+str_view_all(nombre,"[abc]",)
+
+
+
+```
+
+### Más patrones
+
+Existe una serie de clases preconstruídas , que se utilizan dentro de  `[]`:
+
+`[:punct:]`: punctuation.
+`[:alpha:]`: letras.
+`[:lower:]`: letras minusculas.
+`[:upper:]`: letras mayusculas.
+`[:digit:]`: digitos.
+`[:xdigit:]`: digitos hex.
+`[:alnum:]`: letras y números.
+`[:graph:]`: letras, números y puntuación.
+`[:print:]`: letras, números y puntuación y espacio en blanco.
+`[:space:]`: equivalente a  `\s`.
+`[:blank:]`: espacio y tab.
+
+### Repetición
+Se puede controlar cuantas veces un patrón empata con operadores de repetición
+
+`?`: 0 o 1.
+`+`: 1 o más.
+`*`: 0 o más.
+
+```{r regex6}
+
+
+x <- "1888 es el número más largo: MDCCCLXXXVIII"
+str_extract(x, "CC?")
+
+str_extract(x, "C+")
+
+str_extract(x, "XX*")
+
+
+```
+
+
+También se puede especificar el número de repeticiones específicamente:
+
+`{n}`: exactamente n
+`{n,}`: n o más
+`{,m}`: como máximo m
+`{n,m}`: entre n y m
+
+
+```{r regex7}
+
+
+x <- "1888 es el número más largo: MDCCCLXXXVIII"
+str_extract(x, "CC?")
+
+str_extract(x, "C+")
+
+str_extract(x, "XX*")
+
+
+```
+
+
+### Alternación
+
+`|` es el operador de alternación, para que se puede escoger entre varios patrones:
+
+```{r regex8}
+
+nombre<- str_to_lower(salud$NOMBREESTABLECIMIENTO[1:20])
+str_view_all(nombre, "hospital|area")
+
+```
+
+### Ejemplos compuestos
+
+```{r regex9}
+
+# contar la proporción de vocales
+
+nombre
+
+vocales<-str_count(nombre, "[aeiouAEIOU]")
+
+vocales
+
+total<- str_length(nombre)
+
+total
+
+vocales/total
+
+# contar la proporción de strings con más de dos vocales seguidos
+
+str_view_all(nombre,"[aeiou]{2,}?")
+
+
+# Cuantos empiezan con H (Hospital)?
+sum(str_detect(salud$NOMBREESTABLECIMIENTO, "^H"))
+
+# Cuantos empiezan con A (Area de salud)?
+sum(str_detect(salud$NOMBREESTABLECIMIENTO, "^A"))
+
+# Cuantos empiezan con L (Laboratorio)?
+sum(str_detect(salud$NOMBREESTABLECIMIENTO, "^L"))
+
+
+# Cuantos son el Hospital Calderón Guardia
+length(str_subset(salud$NOMBREESTABLECIMIENTO, "GUARDIA$"))
+
+#Reemplazar patrones
+
+x <- c("apple", "pear", "banana")
+str_replace(x, "[aeiou]", "-")
+#> [1] "-pple"  "p-ar"   "b-nana"
+str_replace_all(x, "[aeiou]", "-")
+
+#Reemplaza "." por espacio vacío.
+head(str_replace_all(salud$NOMBREESTABLECIMIENTO, "[:punct:]", ""),10)
+
+
+```
+
+
+### Agrupación
+
+Se utiliza `()` para definir grupos de diferentes patrones(match agrupado:
+
+```{r regex10}
+
+# Ejemplo: Encontrar Sustantivos
+
+head(sentences,20)
+
+noun <- "(a|the) ([^\\d ]+)"
+
+has_noun <- sentences %>%
+  str_subset(noun) %>%
+  head(10)
+
+str_view_all(has_noun,noun)
+
+has_noun %>%
+str_extract(noun)
+
+```
+
+### Referencias
+
+<https://r4ds.had.co.nz/strings.html#matching-patterns-with-regular-expressions>
+<https://www.gastonsanchez.com/Handling_and_Processing_Strings_in_R.pdf>
+<https://data-flair.training/blogs/r-string-manipulation/>
+<https://www.tutorialspoint.com/r/r_strings.htm>
+<https://stringr.tidyverse.org/articles/regular-expressions.html>
+<https://rstudio-pubs-static.s3.amazonaws.com/268250_56d3e5dd2f72409d80f4d0ad8583f95a.html>
+
+[kable:]<https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html>

@@ -1,0 +1,415 @@
+---
+title: \vspace{3.5in}"Introducción a funciones en R"
+author: "Felipe Jiménez"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: 
+  html_document:
+    toc: true # table of content true
+    toc_float: true
+    toc_depth: 4  # upto three depths of headings (specified by #, ## and ###)
+    number_sections: true  ## if you want number sections at each table header
+    theme: united  # many options for theme, this one is my favorite.
+    highlight: tango  # specifies the syntax highlighting style
+---
+
+<img src="logo.png" style="position:absolute;top:0px;right:0px;" />
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Funciones
+
+Una de las maneras de incrementar nuestro valor como analistas de datos, es entender la potencia 
+y flexibilidad que ofrece crear funciones personalizadas.
+
+Las funciones permiten al analista automatizar tareas comunes en una forma más inteligente y conveniente que el copiar y pegar, de tal manera que se cree un proceso genérico que sea aplicable a diversas situaciones en múltiples contextos.
+
+**Cuando se debe escribir una función?**
+
+Se debe considerar escribir una función cuando el analista se encuentra a si mismo copiando y pegando el mismo codigo más de al menos 3 veces.
+
+Por ejemplo:
+
+```{r Functions1}
+
+#Data frame ficticio de asistencia de aficionados equipos
+
+df <- data.frame(Alajuela = round(runif(10,0,20000)),
+                 Saprissa = round(runif(10,0,20000)),
+                 Cartago = round(runif(10,0,5000)),
+                 Heredia = round(runif(10,0,10000)),
+                 PerezZeledon = round(runif(10,0,8000)),
+                 SanCarlos = round(runif(10,0,6000)),
+                 Grecia = round(runif(10,0,5000)),
+                 UCR = round(runif(10,0,500)),
+                 Carmelita= round(runif(10,0,500)),
+                 Guadalupe = round(runif(10,0,1500)),
+                 Limon = round(runif(10,0,4500))
+                 )
+
+df
+
+#Ahora, queremos obtener la venta promedio de cada equipo,basado en un monto  de costo de entrada:
+
+precio<-5000
+sum(df$Alajuela)*precio/nrow(df)
+
+
+```
+
+Una manera más elegante,eficiente y reproducible de lograr este tipo de tareas es mediante la creación de funciones.
+
+El anterior ejemplo se puede escribir mediante la siguiente función:
+
+```{r Functions2}
+
+
+# Creación de función
+
+
+montoPromedio <- function(vector,precio){ # dentro de "function se incluyen los argumentos de la función
+  
+  # Cuerpo de la función
+  
+  calculo<- sum(vector)*precio/length(vector)
+  calculop <- paste0("El valor promedio es de ", calculo)
+  
+  # En return se incluye el resultado deseado que la función debe guardar
+  # Cuando se tienen varios resultados se pueden guardar en una lista
+  
+  return(calculop)
+}
+
+#Probar la función
+
+MontoAlajuela <- montoPromedio(vector=df$Alajuela,precio=5000)
+
+MontoAlajuela
+
+
+```
+
+Veamos un ejemplo más:
+
+Una persona desea sacar un préstamo, de \( P \) colones a una tasa de interés mensual \( i \). El préstamo tiene que ser reembolsado en \( n \) cuotas mensuales de tamaño \( R \), comenzando dentro de un mes. El problema es calcular \( R \). La fórmula \( R \) es:
+
+\[ R = P \cdot \left( \frac{i}{1 - (1 + i)^{-n}} \right) \]
+
+Si suponemos que \( P=150000 \), que la tasa de interés es del 2% y que el número de pagos es 10. EL código en R sería:
+
+```{r functions3}
+
+tasa.interes <- 0.02
+n <- 10
+principal <- 150000
+pago <- principal * tasa.interes/(1 - (1 + tasa.interes)^(-n))
+pago
+
+```
+
+
+Escribiendolo como una función:
+
+```{r functions4}
+
+calcula.cuota <- function(tasa.interes, n, principal) {
+    pago <- principal * tasa.interes/(1 - (1 + tasa.interes)^(-n))
+    return(pago)
+}
+
+calcula.cuota(tasa.interes=0.02, n=10,principal= 150000)
+
+#Otros datos
+
+calcula.cuota(tasa.interes=0.08, n=5,principal= 1000000)
+
+
+
+```
+
+# La sentencia `if`
+
+La clásica sentencia `if` cumple la función de toma de decisiones con respecto a algún flujo de datos.
+
+La estructura de la función es la siguiente:
+
+```{r if,eval=F}
+
+if (test_expression) {
+statement
+}
+
+```
+
+
+Si `test_expression` es igual a  `TRUE`, el `statement` se ejecuta.Pero si `test_expression` es igual a  `FALSE`, nada pasa.Acá,`test_expression` puede ser lógico o numérico, pero solamente el primer elemento es tomado en consideración:
+
+```{r if2}
+
+x <- 5
+
+if(x > 0){
+print("Positive number")
+}
+
+x <- -5
+
+if(x > 0){
+print("Positive number")
+}
+
+
+```
+
+
+
+El diagrama de la sentencia `if` es el siguiente:
+
+![**Flujograma de la sentencia `if`**](if.PNG)
+
+## Agregando `else`
+
+En la función anterior, observamos como no pasaba nada si la operación no se cumplia.
+
+Agragando el componente `else`, se puede evaluar tanto para el resultado `TRUE` como el `FALSE` .La estructura es la siguiente:
+
+```{r if3,eval=FALSE}
+
+if (test_expression) {
+  
+statement1
+  
+} else {
+  
+statement2
+}
+
+
+```
+
+
+El diagrama de la sentencia `if` `else` es el siguiente:
+
+![**Flujograma de la sentencia `if`...`else`**](ifelse.PNG)
+
+```{r if4}
+
+x <- -5
+if(x > 0){
+print("Non-negative number")
+} else {
+print("Negative number")
+}
+
+
+```
+
+
+## `if` ... `else` encadenado
+
+En muchas ocasiones, tenemos más de dos alternativas, por lo que podemos utilizar la sentencia de manera encadenada:
+
+```{r if5,eval=FALSE}
+
+if ( test_expression1) {
+statement1
+} else if ( test_expression2) {
+statement2
+} else if ( test_expression3) {
+statement3
+} else {
+statement4
+}
+
+```
+
+Siguiendo el mismo ejemplo:
+
+```{r if6}
+
+x <- 0
+if (x < 0) {
+print("Negative number")
+} else if (x > 0) {
+print("Positive number")
+} else
+print("Zero")
+
+```
+
+Alternativamente se puede utilizar la función `ifelse`.
+
+## Manejando la sentencia `if` en funciones
+
+Supongamos que en los datos generados de equipos de fútbol, queremos conocer si un equipo tuvo más asistencia que otro.Para esto podemos programar una función:
+
+
+```{r if7,eval=FALSE}
+
+if ( test_expression1) {
+statement1
+} else if ( test_expression2) {
+statement2
+} else if ( test_expression3) {
+statement3
+} else {
+statement4
+}
+
+```
+
+Siguiendo el mismo ejemplo:
+
+```{r if8}
+
+
+compara<- function(columna1,columna2,df){
+  
+  if(sum(df[,columna1])>sum(df[,columna2])){
+    
+    result<- names(df)[columna1]
+  }
+  
+  else if(sum(df[,columna1])<sum(df[,columna2])){
+    
+    result<- names(df)[columna2]
+    
+  }
+    
+  else {
+    
+    result<- c("Equipos tuvieron misma asistencia")
+    
+  }
+  
+  return(result)
+  
+}
+
+compara(1,2,df)
+
+compara(2,2,df)
+
+compara(3,4,df)
+
+```
+
+
+## Función `if` con más de un resultado
+
+Podemos programar una función para que tenga como resultado más de un elemento.Por ejemplo, queremos tener una función que calcule la correlación entre dos vectores, pero que a su vez de la opción al usuario de plotear el scatterplot:
+
+```{r if9}
+
+cor.plot <- function(x, y, plotear = FALSE) {
+    if (plotear == TRUE) 
+        plot(x, y)
+    return(cor(x, y))
+}
+
+#Evaluar función
+
+vec1 <- runif(50)
+vec2 <- rnorm(50)
+
+#Sin definir el argumento "plotear"
+cor.plot(vec1, vec2)
+#Definiendo "plotear"==TRUE
+cor.plot(vec1, vec2, plotear=TRUE)
+#Definiendo "plotear"==FALSE
+cor.plot(vec1, vec2, plotear=F)
+
+```
+
+
+Alternativamente, se pueden almacenar todos los elementos de la función como una lista dentro de `return` :
+
+```{r if10}
+
+cor.plot2 <- function(x, y, plotear = FALSE) {
+    if (plotear == TRUE) 
+        
+    return(list(correlacion=cor(x, y),plot=plot(x, y)
+                )
+           )
+}
+
+#Evaluar función
+
+vec1 <- runif(50)
+vec2 <- rnorm(50)
+
+cor.plot2(vec1, vec2, plotear=TRUE)
+
+```
+
+
+Otro ejemplo de función con la función `if`, es generando argumentos en los que el usuario pueda escoger el procedimiento a seguir:
+
+```{r if11}
+
+
+
+#Crea función con argumento "función"  de varias opciones
+calcula <- function(x, y, funcion = c("multiplica","suma")) {
+  if (funcion == "multiplica") {
+    res<- x*y
+    return(res)
+  }
+  
+  else{ res2<-x+y
+  res2}
+}
+
+#Datos de ejemplo
+x<-rnorm(10)
+
+y<-rnorm(10)
+
+x
+y
+
+#Cálcula función con ambas opciones
+
+calcula(x,y,funcion = "multiplica")
+
+calcula(x,y,funcion = "suma")
+
+
+```
+
+
+
+## Ciclo `for` en R
+
+Como se ha venido explicando, en el análisis de datos usualmente nos enfrentamos a situaciones
+tediosas o repetitivas que en algunas ocasiones se pueden volver imporsibles ejecutar de manera manual.En esas situaciones es donde entre en juego los ciclos.En este curso vamos a introducir el ciclo `for` que pasa iterativamente por cada uno de los elementos que se le indique y ejecuta una acción hasta que haya recorrido todos los elementos.
+
+El siguiente es el diagrama del ciclo `for`: 
+
+![**Flujograma del ciclo `for`**](ifelse.PNG)
+
+Volviendo al ejemplo de la asiatencia de los equipos de fútbol, supongamos que debemos crear un reporte con el monto promedio por partido que cada equipo tuvo( con la ayuda de la función `montoPromedio` que ya calculamos) e imprimir en pantalla el resultado para cada uno.
+
+
+```{r for1}
+
+#Definir el límite superior del ciclo for
+n<-ncol(df)
+
+for(i in 1:n){
+  suma<-montoPromedio(df[,i],precio=5000)
+  concat<-paste0(names(df)[i],":",suma)
+  print(concat)
+}
+
+```
+
+
+La mejor manera de entender que está sucediendo en el ciclo, es leyendolo de la siguiente manera:
+"**Para cada i**(donde i es el índice del elemento que el ciclo se encuentra evaluando) **desde 1 hasta n** (el número de columnas de df) , calcule y guarde:
+
+1. suma como resultado de la función montoPromedio y 
+2. además calcule y guarde concat como resultado de la concatenación de names(df) y suma y 
+3. finalmente imprima concat".
