@@ -1,5 +1,5 @@
 ---
-title: "Clase 3:Introducción a R"
+title: "Clase 4:Introducción a R"
 output: 
   learnr::tutorial:
     progressive: true
@@ -9,7 +9,7 @@ output:
 runtime: shiny_prerendered
 theme: united
 description: >
-  Clase 3 de introducción a R.Introducción al diseño de funciones.
+  Clase 4 de introducción a R.Introducción al diseño de funciones.
 ---
 
 ```{r setup, include=FALSE}
@@ -19,6 +19,7 @@ library(purrr)
 library(learnr)
 library(knitr)
 library(lubridate)
+
 knitr::opts_chunk$set(echo = TRUE,warning = FALSE, message = FALSE,fig.width =10 , fig.height = 8)
 tutorial_options(exercise.timelimit = 120)
 knit_hooks$set(optipng = hook_optipng)
@@ -199,7 +200,50 @@ El siguiente es el diagrama del ciclo `for`:
 
 [![](https://cdn.datamentor.io/wp-content/uploads/2017/11/r-for-loop.jpg "Flujograma del ciclo For")](Flujograma%20del%20ciclo%20For)
 
-Volviendo al ejemplo de la asiatencia de los equipos de fútbol, supongamos que debemos crear un reporte con el monto promedio por partido que cada equipo tuvo( con la ayuda de la función `montoPromedio` que ya calculamos) e imprimir en pantalla el resultado para cada uno.
+El ciclo for en R tiene la siguiente estructura:
+
+![](https://www.learnbyexample.org/wp-content/uploads/r/r-for-loop-syntax.png)
+
+### `for`loop sobre un vector
+
+Empecemos con un ejemplo iterando sobre un vector
+
+```{r for0,exercise=TRUE}
+
+colors <- c("red","green","blue","yellow")
+
+for (color in colors) {
+  print(paste0("Mi color favorito es ",color))
+}
+
+```
+
+### `for` loop sobre una lista
+
+También podemos iterar sobre elementos de una lista:
+
+```{r for0B, exercise=TRUE}
+
+l <- list(3.14, "Hi", c(1,2,3))
+
+for (x in l) {
+  print(x)
+}
+
+```
+
+### `for` loop sin `{ llaves }`
+
+Si el `for` loop tiene solo un *statement* , podemos obviar el uso de las llaves { }:
+
+```{r for0C, exercise=TRUE}
+
+
+for (x in 0:4) print(x)
+
+```
+
+Volviendo al ejemplo de la asistencia de los equipos de fútbol, supongamos que debemos crear un reporte con el monto promedio por partido que cada equipo tuvo( con la ayuda de la función `montoPromedio` que ya calculamos) e imprimir en pantalla el resultado para cada uno.
 
 ```{r for1,exercise=TRUE}
 
@@ -220,30 +264,98 @@ La mejor manera de entender que está sucediendo en el ciclo, es leyendolo de la
 2.  además calcule y guarde concat como resultado de la concatenación de names(df) y suma y
 3.  finalmente imprima concat".
 
-## Su turno: Laboratorio Grupal
+## Lectura de archivos de datos en R
 
-1.  Cree una función que retorne la suma de dos números enteros.
+Hasta el momento hemos creado dataframes desde cero o hemos cargado dataframes que se encuentran en el ambiente de R.Pero que pasa si necesitamos leer datos externos a R?
 
-2.  Cree una función que retorne `TRUE` si existe algún entero dentro de un vector.Puede utilizar las funciones `is.numeric()` y `as.numeric()` para resolverlo.
+### Archivos locales
 
-3.  Cree una función que dado un vector numérico imprima el promedio, valores máximo y mínimo de dicho vector.
+Si el archivo esta ubicado localmente( es decir, dentro de la computadora donde nos encontramos trabajando), el primer paso es que debemos setear el *working directory* a la ubicación donde se encuentra dicho archivo.Para esto se utiliza la instrucción setwd("\<path_al_archivo_de_datos\>") donde \<path_al_archivo_de_datos\> es la carpeta donde se encuentra el archivo de datos, por ejemplo "/cloud/project" o "C:/Users/aacs".Notese que se debe usar "/" en lugar de "\\".primero vamos a generar el archivo desde R, guardarlo en una dirección física y luego volver a leerlo como objeto en R:
 
-4.  Cree una función en la que dado un dataframe, devuelva en varios elementos de una lista: a) la estructura del dataframe, b) resumen estadístico, c) top n de observaciones(n debe ser un parámetro de entrada de la función).
+```{r local, exercise=TRUE}
 
-5.  Ejecute, evalue y corrija el siguiente codigo:
+#Crear dataframe 
 
-```{r final, eval=F}
+data <- data.frame(posicion=c(1,2,3,4), 
+                   nombre= c("John","Paul","Ringo","George"),
+                   exitos= c(50,49,2,10)
+                   )
 
-a <- 200
-b <- 33
+data
 
-if (b > a) {
-  print("b is greater than a")
-} else if(a == b) 
-  print("a and b are equal")
-} else {
-  print("a is greater than b")
-}
-  }
+# guardar los datos
+
+#write.table(x=data,file = "data.csv",sep=",")
+
+#leer los datos de nuevos
+
+datosNuevos=read.table(file = "data.csv",sep=",")
+
+datosNuevos
 
 ```
+
+### Archivos externos
+
+También podemos leer archivos externos a nuestro ambiente, por ejemplo guardados en un sitio web.
+
+#### Archivos .txt
+
+Con la función `read.table()` se puede fácilmente leer archivos de extensión .txt.En el siguiente ejemplo veremos como leer este tipo de archivo desde una dirección web:
+
+```{r txt, exercise=TRUE}
+
+df <- read.table(file = "https://s3.amazonaws.com/assets.datacamp.com/blog_assets/test.txt",header = FALSE)
+df
+
+```
+
+Idealmente, en el argumento `file`, se debe pasar solamente el nombre y la extensión del archivo, ya que el *working directory* ya se debería haber configurado previamente.Al usar esta función, por defecto el objeto se convierte en un dataframe.
+
+#### Archivos  .csv
+
+Si un archivo de texto esta separado por "," o ";", usualmente se lee como un archivo de extensión .csv.Para esto se utiliza la función `read.csv` (aunque también funciona `read_table`):
+
+```{r csv, exercise=TRUE}
+
+df <- read.csv("https://s3.amazonaws.com/assets.datacamp.com/blog_assets/test.csv",header = TRUE)
+
+df
+
+```
+
+#### Archivo delimitado por otro caracter
+
+Si el archivo de texto está separado por otro caracter que no sea tab, "," o ";", existe la función `read.delim()` como variante a `read.table()`
+
+```{r otro, exercise=TRUE}
+
+df <- read.delim("https://s3.amazonaws.com/assets.datacamp.com/blog_assets/test_delim.txt", sep="$") 
+
+df
+
+```
+
+## Su turno: Laboratorio Grupal
+
+1.  Utilizando los datos recopilados para su grupo, guarde un dataframe en un archivo .csv y vuelva a leer el archivo guardandolo en R mediante otro nombre de objeto.Recuerde setear el working directory adecuadamente.
+
+2.  Mediante una función, compruebe que el archivo se haya cargado con la misma estructura del objeto original.
+
+3.  Cree una función que permita al usuario introducir dos vectores y le de la posibilidad de escoger entre restar o dividir dichos vectores.
+
+4.  Cree una función que itere sobre el dataframe del ejercicio 1 e imprima para cada integrante del grupo el grado de ejercicio que realiza.El output de ejemplo sería\_:
+
+-   El \<estudiante 1\> realiza \<mucho\> ejercicio.
+
+-   El \<estudiante 2\> realiza \<poco\> ejercicio.
+
+-   El \<estudiante n\> realiza \<algo\> ejercicio.
+
+5.  Que función vista en clases utilizaría para que el resultado del ejercicio anterior se mejorara gramaticalmente y personalizara de acuerdo al tipo de ejercicio que realiza el estudiante?. Por ejemplo
+
+-   El \<estudiante 1\> realiza \<mucho\> ejercicio.
+
+-   El \<estudiante 2\> **no realiza** ejercicio.
+
+-   El \<estudiante n\> realiza \<algo\> **de** ejercicio
